@@ -4,7 +4,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseUrl = "http://localhost:5001/";
 
 const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery: fetchBaseQuery({
+    baseUrl,
+    prepareHeaders: (headers, { getState }) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", token);
+      }
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getItems: builder.query({
       query: () => "menu/menuItems",
@@ -16,8 +25,22 @@ const api = createApi({
         body: loginData,
       }),
     }),
+    createTask: builder.mutation({
+      query: ({ taskData }) => ({
+        url: "tasks/createTask",
+        method: "POST",
+        body: taskData,
+      }),
+    }),
+    authentication: builder.query({
+      query: (userId) => `auth/authentication/${userId}`,
+    }),
   }),
 });
 
-export const { useLoginMutation } = api;
+export const {
+  useLoginMutation,
+  useAuthenticationQuery,
+  useCreateTaskMutation,
+} = api;
 export default api;

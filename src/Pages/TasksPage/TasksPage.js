@@ -8,9 +8,11 @@ import Modal from "../../Shared/modal/modal";
 import {
   closeModal,
   openModal,
+  selectIsEditModalOpen,
   selectIsModalOpen,
 } from "../../Shared/modal/modalSlice";
-import ModalTasksContent from "./modalTasksContent/modalTasksContent";
+import ModalCreateTask from "./modalCreateTask/modalCreateTask";
+import TasksTable from "./tasksTable/tasksTable";
 
 export default function TasksPage() {
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ export default function TasksPage() {
     dispatch(clearUser());
   }
   const openContentModal = () => {
-    setContentModal(<ModalTasksContent></ModalTasksContent>);
+    setContentModal(<ModalCreateTask></ModalCreateTask>);
     dispatch(openModal());
   };
   const closeContentModal = () => {
@@ -43,6 +45,9 @@ export default function TasksPage() {
             closeContentModal={closeContentModal}
           ></Modal>
         )}
+      </div>
+      <div style={{ margin: "0 auto", position: "relative", zIndex: 0 }}>
+        <TasksTable></TasksTable>
       </div>
     </div>
   );

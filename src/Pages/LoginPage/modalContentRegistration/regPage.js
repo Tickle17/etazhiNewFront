@@ -25,7 +25,6 @@ export default function RegPage() {
       ...formData,
       [name]: value,
     });
-    console.log(formData);
   };
 
   useEffect(() => {
@@ -50,6 +49,7 @@ export default function RegPage() {
       });
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.user.id);
         dispatch(setAuthenticated());
         dispatch(closeModal());
         dispatch(setUser(response.data.user));
@@ -57,7 +57,6 @@ export default function RegPage() {
     } catch (error) {
       console.error("Ошибка при выполнении POST-запроса:", error);
     }
-    console.log("Отправляем данные на сервер:", formData);
   };
 
   return (

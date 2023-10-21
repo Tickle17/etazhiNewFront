@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectUser,
-  setAuthenticated,
-  setUser,
-} from "../../../Shared/Redux/Slices/authSlice";
-import { closeModal } from "../../../Shared/modal/modalSlice";
+import { selectUser } from "../../../Shared/Redux/Slices/authSlice";
+import { useCreateTaskMutation } from "../../../Shared/Redux/Slices/api";
+import { featuresModalCreateTask } from "./features/features";
 
-export default function ModalTasksContent() {
+export default function ModalCreateTask() {
+  //  techConsts
   const dispatch = useDispatch();
   const User = useSelector(selectUser);
+  const [createTask] = useCreateTaskMutation();
+  // getUsers
   const [responsible, setResponsible] = useState([]);
   const PostData = {
     role: User.role,
@@ -34,61 +34,35 @@ export default function ModalTasksContent() {
       console.error("Ошибка при выполнении Post-запроса:", error);
     }
   }, []);
-  ///////////////////////////////////FORM DATA////////////////////////////////////////////////
-  const [taskData, setTaskData] = useState({
-    title: "",
-    description: "",
-    priority: "Средний",
-    status: "К выполнению",
-    deadLine: "",
-    responsible: "",
-    responsibleId: "",
-    createdBy: `${User.firstName} ${User.secondName}`,
-    userRole: User.role,
-    userId: User.id,
-    responsibleRole: "",
-  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    console.log(name);
-    if (name === "responsible") {
-      const selectedResponsible = responsible.find((resp) => resp.id === value);
-      console.log(selectedResponsible);
-      const newTaskData = {
-        ...taskData,
-        responsible: `${selectedResponsible.firstName}${selectedResponsible.secondName}`,
-        responsibleId: selectedResponsible.id,
-        responsibleRole: selectedResponsible.role,
-      };
-      setTaskData(newTaskData);
-      console.log(newTaskData);
-    } else {
-      setTaskData({
-        ...taskData,
-        [name]: value,
-      });
-    }
-  };
+  const [taskData, setTaskData] = useState(
+    {
+      title: "",
+      description: "",
+      priority: "Средний",
+      status: "К выполнению",
+      deadLine: "",
+      responsible: "",
+      responsibleId: "",
+      createdBy: `${User.firstName} ${User.secondName}`,
+      userRole: User.role,
+      userId: User.id,
+      responsibleRole: "",
+    },
+    []
+  );
 
-  ///////////////////////////////////FORM DATA////////////////////////////////////////////////
+  const handleChange = featuresModalCreateTask.extractedHandleChange(
+    responsible,
+    taskData,
+    setTaskData
+  );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:5001/tasks/createTask",
-        { taskData }
-      );
-      // if (response.status === 200) {
-      //   dispatch(closeModal());
-      // }
-      console.log(response);
-    } catch (error) {
-      console.error("Ошибка при выполнении POST-запроса:", error);
-    }
-    console.log("Отправляем данные на сервер:", taskData);
-  };
+  const handleSubmit = featuresModalCreateTask.extractedHandleSubmit(
+    createTask,
+    taskData,
+    dispatch
+  );
 
   return (
     <div>

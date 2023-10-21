@@ -42,6 +42,7 @@ export default function LoginPage() {
     try {
       const response = await login({ loginData });
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("id", response.data.user.id);
       dispatch(setAuthenticated());
       dispatch(setUser(response.data.user));
     } catch (error) {

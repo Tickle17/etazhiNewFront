@@ -4,6 +4,7 @@ const modalSlice = createSlice({
   name: "modalSlice",
   initialState: {
     isModalOpen: false,
+    isEditModalOpen: false,
   },
   reducers: {
     openModal: (state) => {
@@ -14,9 +15,20 @@ const modalSlice = createSlice({
       state.isModalOpen = false;
       document.body.classList.remove("no-scroll");
     },
+    openEditModal: (state) => {
+      state.isEditModalOpen = true;
+      document.body.classList.add("no-scroll");
+    },
+    closeEditModal: (state) => {
+      state.isEditModalOpen = false;
+      document.body.classList.remove("no-scroll");
+    },
   },
 });
 
-export const { openModal, closeModal } = modalSlice.actions;
+export const { openModal, closeModal, openEditModal, closeEditModal } =
+  modalSlice.actions;
 export const selectIsModalOpen = (state) => state.modalSlice.isModalOpen;
+export const selectIsEditModalOpen = (state) =>
+  state.modalSlice.isEditModalOpen;
 export default modalSlice.reducer;
