@@ -12,7 +12,7 @@ import {
 } from "../../Shared/modal/modalSlice";
 import ModalTasksContent from "./modalTasksContent/modalTasksContent";
 
-export default function CasesPage() {
+export default function TasksPage() {
   const dispatch = useDispatch();
   const [contentModal, setContentModal] = useState(<></>);
 

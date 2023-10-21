@@ -1,40 +1,94 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../../Shared/Redux/Slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectUser,
+  setAuthenticated,
+  setUser,
+} from "../../../Shared/Redux/Slices/authSlice";
+import { closeModal } from "../../../Shared/modal/modalSlice";
 
-export default function ModalTasksPage() {
+export default function ModalTasksContent() {
+  const dispatch = useDispatch();
   const User = useSelector(selectUser);
   const [responsible, setResponsible] = useState([]);
-
+  const PostData = {
+    role: User.role,
+    userId: User.id,
+  };
   useEffect(() => {
     try {
       axios
-        .post("http://localhost:5001/auth/getLeaderUsers", leaderId.id)
+        .post("http://localhost:5001/auth/taskWorker", PostData)
         .then((response) => {
           const respData = response.data.map((item) => item);
-          setResponsible(respData);
+          if (PostData.role === "Руководитель") {
+            const respWorkers = respData[0];
+            const respWorkersArray = respWorkers.map((item) => item);
+            const respLeader = respData[1];
+            respWorkersArray.push(respLeader);
+            setResponsible(respWorkersArray);
+          } else setResponsible(respData);
         });
     } catch (error) {
-      console.error("Ошибка при выполнении GET-запроса:", error);
+      console.error("Ошибка при выполнении Post-запроса:", error);
     }
   }, []);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setTaskData({
-      ...taskData,
-      [name]: value,
-    });
-  };
+  ///////////////////////////////////FORM DATA////////////////////////////////////////////////
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
     priority: "Средний",
     status: "К выполнению",
-    createdBy: `${leaderId.firstName} ${leaderId.secondName}`,
     deadLine: "",
     responsible: "",
+    responsibleId: "",
+    createdBy: `${User.firstName} ${User.secondName}`,
+    userRole: User.role,
+    userId: User.id,
+    responsibleRole: "",
   });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name);
+    if (name === "responsible") {
+      const selectedResponsible = responsible.find((resp) => resp.id === value);
+      console.log(selectedResponsible);
+      const newTaskData = {
+        ...taskData,
+        responsible: `${selectedResponsible.firstName}${selectedResponsible.secondName}`,
+        responsibleId: selectedResponsible.id,
+        responsibleRole: selectedResponsible.role,
+      };
+      setTaskData(newTaskData);
+      console.log(newTaskData);
+    } else {
+      setTaskData({
+        ...taskData,
+        [name]: value,
+      });
+    }
+  };
+
+  ///////////////////////////////////FORM DATA////////////////////////////////////////////////
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/tasks/createTask",
+        { taskData }
+      );
+      // if (response.status === 200) {
+      //   dispatch(closeModal());
+      // }
+      console.log(response);
+    } catch (error) {
+      console.error("Ошибка при выполнении POST-запроса:", error);
+    }
+    console.log("Отправляем данные на сервер:", taskData);
+  };
 
   return (
     <div>
@@ -99,24 +153,26 @@ export default function ModalTasksPage() {
           onChange={handleChange}
         />
       </div>
+      {/*не выбирает сотрудника, решить */}
       <div className="reg-page">
         <label htmlFor="responsible">Выберите сотрудника</label>
         <select
           id="responsible"
           name="responsible"
-          value={taskData.responsible}
+          value={taskData.responsibleId}
           onChange={handleChange}
         >
           <option value="">Выберите сотрудника</option>
-          {responsible.map((responsible) => (
-            <option key={responsible.id} value={responsible.id}>
-              {`${responsible.firstName} ${responsible.secondName}`}
+
+          {responsible.map((resp) => (
+            <option key={resp.id} value={resp.id}>
+              {`${resp.firstName} ${resp.secondName}`}
             </option>
           ))}
         </select>
       </div>
 
-      <button>Отправить</button>
+      <button onClick={handleSubmit}>Отправить</button>
     </div>
   );
 }
