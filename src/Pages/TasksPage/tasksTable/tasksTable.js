@@ -12,8 +12,9 @@ import {
   selectIsEditModalOpen,
 } from "../../../Shared/modal/modalSlice";
 import TaskModal from "./taskModal";
+import filterTasksBySelectedOption from "./features/filetOptions";
 
-function TasksTable() {
+function TasksTable(selectedFilter) {
   // techConsts
   const dispatch = useDispatch();
   const [gridApi, setGridApi] = useState(null);
@@ -58,6 +59,11 @@ function TasksTable() {
     { headerName: "Ответственный", field: "responsible" },
     { headerName: "Статус", field: "status" },
   ];
+  // Отображение задач в зависимости от выбранного фильтра
+  const filteredTasks = filterTasksBySelectedOption(rowData, selectedFilter);
+
+  // console.log(selectedFilter);
+  // console.log(filteredTasks);
 
   return (
     <div
@@ -66,7 +72,7 @@ function TasksTable() {
     >
       <AgGridReact
         columnDefs={columnDefs}
-        rowData={rowData}
+        rowData={filteredTasks}
         onGridReady={(params) => setGridApi(params.api)}
         onCellClicked={(event) => {
           if (event.colDef.field) {
