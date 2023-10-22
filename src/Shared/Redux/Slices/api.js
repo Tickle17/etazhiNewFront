@@ -32,6 +32,13 @@ const api = createApi({
         body: taskData,
       }),
     }),
+    updateTask: builder.mutation({
+      query: (editedTask) => ({
+        url: `tasks/updateTask/${editedTask.id}`,
+        method: "PUT",
+        body: editedTask,
+      }),
+    }),
     authentication: builder.query({
       query: (userId) => `auth/authentication/${userId}`,
     }),
@@ -42,5 +49,6 @@ export const {
   useLoginMutation,
   useAuthenticationQuery,
   useCreateTaskMutation,
+  useUpdateTaskMutation,
 } = api;
 export default api;

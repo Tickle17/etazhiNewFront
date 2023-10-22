@@ -1,23 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { closeModal } from "../../../Shared/modal/modalSlice";
+import { closeEditModal } from "../../../Shared/modal/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../../Shared/Redux/Slices/authSlice";
 import axios from "axios";
 import extractedHandleChange from "./features/features";
+import { useUpdateTaskMutation } from "../../../Shared/Redux/Slices/api";
 
 export default function TaskModal({ task }) {
-  console.log(task);
   const [responsible, setResponsible] = useState([]);
   const User = useSelector(selectUser);
   const [editedTask, setEditedTask] = useState(task);
   const [editTask, setEditTask] = useState(false);
   const dispatch = useDispatch();
-  const handleSave = () => {
-    // onSave(editedTask);
-    dispatch(closeModal());
+  const [updateTask] = useUpdateTaskMutation();
+
+  const handleSave = async () => {
+    console.log(editedTask);
+
+    try {
+      const response = await updateTask(editedTask);
+      if (response.data) {
+        console.log(response.data);
+        alert("Задача успешно обновлена");
+        dispatch(closeEditModal());
+        window.location.reload();
+      }
+    } catch (error) {
+      alert(error);
+      dispatch(closeEditModal());
+    }
+    dispatch(closeEditModal());
   };
   const handleEdit = () => {
-    // onSave(editedTask);
+    // console.log(editedTask);
     setEditTask(!editTask);
   };
 
@@ -159,7 +174,7 @@ export default function TaskModal({ task }) {
         </form>
       )}
       <button onClick={handleEdit}>Редактировать</button>
-      <button onClick={handleSave}>Закрыть</button>
+      {/*<button onClick={dispatch(closeEditModal())}>Закрыть</button>*/}
       <button onClick={handleSave}>Сохранить</button>
     </div>
   );
