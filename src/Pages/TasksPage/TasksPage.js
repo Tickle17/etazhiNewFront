@@ -41,7 +41,6 @@ export default function TasksPage() {
   const isModalOpen = useSelector(selectIsModalOpen);
   return (
     <div>
-      <div>Зашел</div>
       <button onClick={DelLocalStor}>Выйти</button>
       <div>
         <button onClick={openContentModal}>Создать задачу</button>

@@ -1,0 +1,14 @@
+/* Пример CSS-стилей */
+.custom-cell-overdue {
+    color: #fc2929;
+
+}
+.custom-cell-complete {
+    color: #287000;
+
+}
+
+.custom-cell-normal {
+    color: rgb(100, 100, 100);
+
+}

@@ -24,6 +24,7 @@ const api = createApi({
         method: "POST",
         body: loginData,
       }),
+      transformResponse: (response) => response,
     }),
     createTask: builder.mutation({
       query: ({ taskData }) => ({

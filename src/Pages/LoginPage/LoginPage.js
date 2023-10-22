@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   closeModal,
@@ -37,14 +38,32 @@ export default function LoginPage() {
       [name]: value,
     });
   };
+  const [errorMessage, setErrorMessage] = useState({
+    errorStatus: false,
+    errorText: "",
+  });
 
   const handleLogin = async () => {
     try {
       const response = await login({ loginData });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("id", response.data.user.id);
-      dispatch(setAuthenticated());
-      dispatch(setUser(response.data.user));
+      if (response.token && response.user) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.user.id);
+        dispatch(setAuthenticated());
+        dispatch(setUser(response.data.user));
+      } else {
+        // Ошибка: сообщение об ошибке исчезнет через 0.5 секунды
+        setErrorMessage({
+          errorStatus: true,
+          errorText: response.error.data.message,
+        });
+        setTimeout(() => {
+          setErrorMessage({
+            errorStatus: false,
+            errorText: "",
+          });
+        }, 1000);
+      }
     } catch (error) {
       console.error("Ошибка при выполнении запроса:", error);
     }
@@ -72,6 +91,9 @@ export default function LoginPage() {
         ></Modal>
       )}
       <button onClick={handleLogin}>Войти</button>
+      {errorMessage.errorStatus && (
+        <div className="error-message">{errorMessage.errorText}</div>
+      )}
     </div>
   );
 }

@@ -15,12 +15,9 @@ export default function TaskModal({ task }) {
   const [updateTask] = useUpdateTaskMutation();
 
   const handleSave = async () => {
-    console.log(editedTask);
-
     try {
       const response = await updateTask(editedTask);
       if (response.data) {
-        console.log(response.data);
         alert("Задача успешно обновлена");
         dispatch(closeEditModal());
         window.location.reload();

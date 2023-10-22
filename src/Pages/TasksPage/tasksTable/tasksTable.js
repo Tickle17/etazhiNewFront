@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./style.css";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -53,17 +54,26 @@ function TasksTable(selectedFilter) {
   }, []);
 
   const columnDefs = [
-    { headerName: "Заголовок", field: "title" },
+    {
+      headerName: "Заголовок",
+      field: "title",
+      cellClass: (params) => {
+        const cellDate = new Date(params.data.deadLine);
+        if (params.data.status === "Выполнена") {
+          return "custom-cell-complete";
+        }
+        return cellDate < new Date()
+          ? "custom-cell-overdue"
+          : "custom-cell-normal";
+      },
+    },
     { headerName: "Приоритет", field: "priority" },
     { headerName: "Дата окончания", field: "deadLine" },
     { headerName: "Ответственный", field: "responsible" },
     { headerName: "Статус", field: "status" },
   ];
-  // Отображение задач в зависимости от выбранного фильтра
-  const filteredTasks = filterTasksBySelectedOption(rowData, selectedFilter);
 
-  // console.log(selectedFilter);
-  // console.log(filteredTasks);
+  const filteredTasks = filterTasksBySelectedOption(rowData, selectedFilter);
 
   return (
     <div
