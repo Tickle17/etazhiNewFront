@@ -41,13 +41,13 @@ function TasksTable(selectedFilter) {
   useEffect(() => {
     if (User.role === "Руководитель") {
       axios
-        .get(`http://localhost:5001/tasks/leader/${User.id}`, { headers })
+        .get(`https://dornetshop.ru/tasks/leader/${User.id}`, { headers })
         .then((response) => {
           setRowData(response.data);
         });
     } else
       axios
-        .get(`http://localhost:5001/tasks/user/${User.id}`, { headers })
+        .get(`https://dornetshop.ru/tasks/user/${User.id}`, { headers })
         .then((response) => {
           setRowData(response.data);
         });

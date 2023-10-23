@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Определите URL вашего сервера
-const baseUrl = "http://localhost:5001/";
+const baseUrl = "https://dornetshop.ru/";
 
 const api = createApi({
   baseQuery: fetchBaseQuery({

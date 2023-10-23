@@ -30,7 +30,7 @@ export default function RegPage() {
   useEffect(() => {
     try {
       axios
-        .get("http://localhost:5001/auth/getLeaderWorkers")
+        .get("https://dornetshop.ru/auth/getLeaderWorkers")
         .then((response) => {
           const leaderData = response.data.map((item) => item);
           setLeaders(leaderData);
@@ -44,7 +44,7 @@ export default function RegPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/auth/register", {
+      const response = await axios.post("https://dornetshop.ru/auth/register", {
         formData,
       });
       if (response.status === 200) {

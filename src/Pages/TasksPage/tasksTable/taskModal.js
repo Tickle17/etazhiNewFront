@@ -51,7 +51,7 @@ export default function TaskModal({ task }) {
   useEffect(() => {
     try {
       axios
-        .post("http://localhost:5001/auth/taskWorker", PostData)
+        .post("https://dornetshop.ru/auth/taskWorker", PostData)
         .then((response) => {
           const respData = response.data.map((item) => item);
           if (PostData.role === "Руководитель") {
