@@ -16,6 +16,9 @@ function App() {
   const usedId = localStorage.getItem("id");
   const { data, error, isLoading } = useAuthenticationQuery(usedId);
   const dispatch = useDispatch();
+
+  const newVariableC = 20; // - new code
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       if (data) {
