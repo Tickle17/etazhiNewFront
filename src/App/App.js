@@ -18,6 +18,7 @@ function App() {
   const dispatch = useDispatch();
 
   const a = 20; // - new code
+  const b = 30; // - new branch code
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
