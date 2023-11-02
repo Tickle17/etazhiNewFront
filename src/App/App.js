@@ -17,6 +17,7 @@ function App() {
   const { data, error, isLoading } = useAuthenticationQuery(usedId);
   const dispatch = useDispatch();
 
+  const b = 30; // - new branch code
   const newVariableC = 20; // - new code
 
   useEffect(() => {
